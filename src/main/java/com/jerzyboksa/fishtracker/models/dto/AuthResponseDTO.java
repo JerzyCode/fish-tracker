@@ -2,7 +2,7 @@ package com.jerzyboksa.fishtracker.models.dto;
 
 public record AuthResponseDTO(
     String token,
-    String email,
+    String name,
     Long userId,
     Long expirationDate
 ) {

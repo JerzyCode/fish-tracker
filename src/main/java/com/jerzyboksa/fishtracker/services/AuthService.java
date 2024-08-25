@@ -2,9 +2,9 @@ package com.jerzyboksa.fishtracker.services;
 
 import com.jerzyboksa.fishtracker.exceptions.UsernameTakenException;
 import com.jerzyboksa.fishtracker.models.User;
+import com.jerzyboksa.fishtracker.models.dto.AuthResponseDTO;
 import com.jerzyboksa.fishtracker.models.dto.LoginRequestDTO;
 import com.jerzyboksa.fishtracker.models.dto.RegisterRequestDTO;
-import com.jerzyboksa.fishtracker.models.dto.AuthResponseDTO;
 import com.jerzyboksa.fishtracker.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,7 +45,7 @@ public class AuthService {
     var jwtToken = jwtService.buildToken(user);
 
     return new AuthResponseDTO(jwtToken,
-        jwtService.extractUsername(jwtToken),
+        user.getName(),
         jwtService.extractUserId(jwtToken),
         jwtService.extractExpiration(jwtToken).getTime());
   }

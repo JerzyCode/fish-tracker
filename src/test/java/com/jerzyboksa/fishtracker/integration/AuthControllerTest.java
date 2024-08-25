@@ -96,7 +96,7 @@ public class AuthControllerTest {
     //then
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).isNotNull();
-    assertThat(response.getBody().email()).isEqualTo(existingUser.getEmail());
+    assertThat(response.getBody().name()).isEqualTo(existingUser.getName());
     assertThat(response.getBody().token()).isNotNull();
   }
 

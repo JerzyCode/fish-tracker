@@ -85,6 +85,7 @@ class AuthServiceTest {
     var request = new LoginRequestDTO("test@mail.com", "password");
     var savedUser = User.builder()
         .id(1L)
+        .name("name")
         .email(request.email())
         .password(request.password())
         .build();
@@ -98,7 +99,7 @@ class AuthServiceTest {
     assertThat(response.token()).isNotNull();
     assertThat(response.userId()).isNotNull();
     assertThat(response.expirationDate()).isNotNull();
-    assertThat(response.email()).isEqualTo(savedUser.getEmail());
+    assertThat(response.name()).isEqualTo(savedUser.getName());
     verify(authManager, times(1)).authenticate(any());
   }
 

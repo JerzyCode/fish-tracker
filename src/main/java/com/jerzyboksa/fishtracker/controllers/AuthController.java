@@ -23,14 +23,14 @@ public class AuthController {
 
   @PostMapping("/register")
   public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequestDTO request) throws UsernameTakenException {
-    log.debug("register(), email=" + request.email());
+    log.debug("register(), name=" + request.email());
     authService.register(request);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/login")
   public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
-    log.debug("login(), email=" + request.email());
+    log.debug("login(), name=" + request.email());
     return ResponseEntity.ok(authService.login(request));
   }
 
