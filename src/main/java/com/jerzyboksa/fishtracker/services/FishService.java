@@ -22,7 +22,7 @@ public class FishService {
         .toList();
   }
 
-  public void createFish(Long userId, CreateFishRequestDTO request) {
+  public Long createFish(Long userId, CreateFishRequestDTO request) {
     var user = userRepository.findById(userId).orElseThrow();
     var fish = Fish.builder()
         .date(request.getDate())
@@ -36,6 +36,6 @@ public class FishService {
         .user(user)
         .build();
 
-    fishRepository.save(fish);
+    return fishRepository.save(fish).getId();
   }
 }

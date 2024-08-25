@@ -3,12 +3,12 @@ package com.jerzyboksa.fishtracker.models.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
 public class CreateFishRequestDTO {
-  private LocalDateTime date;
+  private LocalDate date;
   private String specie;
   private Double size;
   private Double weight;

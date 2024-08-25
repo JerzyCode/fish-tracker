@@ -3,7 +3,7 @@ package com.jerzyboksa.fishtracker;
 import com.jerzyboksa.fishtracker.models.Fish;
 import com.jerzyboksa.fishtracker.models.User;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Random;
 
 public class TestHelper {
@@ -12,7 +12,7 @@ public class TestHelper {
 
     return Fish.builder()
         .id(id)
-        .date(LocalDateTime.now().minusDays(12))
+        .date(LocalDate.now().minusDays(12))
         .specie(specie)
         .size(random.nextDouble() * 50)
         .weight(random.nextDouble() * 50)
@@ -20,6 +20,7 @@ public class TestHelper {
         .method("method")
         .bait("bait")
         .imgPath("imgPath")
+        .user(user)
         .build();
   }
 

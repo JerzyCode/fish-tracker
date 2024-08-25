@@ -4,7 +4,7 @@ import com.jerzyboksa.fishtracker.models.Fish;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Data
@@ -20,13 +20,13 @@ public class FishLightDto {
     return FishLightDto.builder()
         .id(fish.getId())
         .date(formatDate(fish.getDate()))
-        .specie(fish.getSpecie())//TODO format daty
+        .specie(fish.getSpecie())
         .size(fish.getSize())
         .weight(fish.getWeight())
         .build();
   }
 
-  private static String formatDate(LocalDateTime date) {
+  private static String formatDate(LocalDate date) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     return date.format(formatter);
 

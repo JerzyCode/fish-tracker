@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -21,7 +21,7 @@ public class Fish {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @NotNull
-  private LocalDateTime date;
+  private LocalDate date;
   @NotNull
   private String specie;
   private Double size;

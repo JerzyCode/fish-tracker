@@ -1,6 +1,7 @@
 package com.jerzyboksa.fishtracker.services;
 
 import com.jerzyboksa.fishtracker.TestHelper;
+import com.jerzyboksa.fishtracker.models.Fish;
 import com.jerzyboksa.fishtracker.models.dto.CreateFishRequestDTO;
 import com.jerzyboksa.fishtracker.repositories.FishRepository;
 import com.jerzyboksa.fishtracker.repositories.UserRepository;
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,19 +69,24 @@ class FishServiceTest {
     //given
     var request = CreateFishRequestDTO.builder()
         .specie("specie")
-        .date(LocalDateTime.now())
+        .date(LocalDate.now())
         .location("location")
         .build();
 
     var user = TestHelper.createUser(1L, "test@mail.com", "test");
 
     when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-
+    when(fishRepository.save(any())).thenReturn(Fish.builder().id(1L).build());
     //when
-    sut.createFish(user.getId(), request);
+    var result = sut.createFish(user.getId(), request);
 
     //then
+    assertThat(result).isEqualTo(1L);
     verify(fishRepository, times(1)).save(any());
+
+    LocalDate localDateTime = LocalDate.now();
+
+    System.out.println(localDateTime);
   }
 
 }
