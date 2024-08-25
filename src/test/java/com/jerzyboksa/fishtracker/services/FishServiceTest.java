@@ -83,10 +83,29 @@ class FishServiceTest {
     //then
     assertThat(result).isEqualTo(1L);
     verify(fishRepository, times(1)).save(any());
+  }
 
-    LocalDate localDateTime = LocalDate.now();
+  @Test
+  void update_fish_should_update_fish() {
+    //given
+    var user = TestHelper.createUser(1L, "test@mail.com", "test");
+    var fishToUpdate = TestHelper.createFish(1L, "Perch", user);
+    var request = SaveFishRequestDTO.builder()
+        .date(LocalDate.now())
+        .specie("specieUpdate")
+        .location("locationUpdated")
+        .bait("baitUpdated")
+        .build();
+    when(fishRepository.findById(fishToUpdate.getId())).thenReturn(Optional.of(fishToUpdate));
 
-    System.out.println(localDateTime);
+    //when
+    sut.updateFish(fishToUpdate.getId(), request);
+
+    //then
+    verify(fishRepository, times(1)).save(fishToUpdate);
+    assertThat(fishToUpdate.getDate()).isEqualTo(request.getDate());
+    assertThat(fishToUpdate.getLocation()).isEqualTo(request.getLocation());
+    assertThat(fishToUpdate.getBait()).isEqualTo(request.getBait());
   }
 
 }

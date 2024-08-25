@@ -1,8 +1,8 @@
 package com.jerzyboksa.fishtracker.services;
 
 import com.jerzyboksa.fishtracker.models.Fish;
-import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.models.dto.FishLightDto;
+import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.repositories.FishRepository;
 import com.jerzyboksa.fishtracker.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,4 +38,20 @@ public class FishService {
 
     return fishRepository.save(fish).getId();
   }
+
+  public void updateFish(Long fishId, SaveFishRequestDTO request) {
+    var fishToUpdate = fishRepository.findById(fishId).orElseThrow();
+
+    fishToUpdate.setDate(request.getDate() == null ? fishToUpdate.getDate() : request.getDate());
+    fishToUpdate.setSpecie(request.getSpecie() == null ? fishToUpdate.getSpecie() : request.getSpecie());
+    fishToUpdate.setSize(request.getSize() == null ? fishToUpdate.getSize() : request.getSize());
+    fishToUpdate.setWeight(request.getWeight() == null ? fishToUpdate.getWeight() : request.getWeight());
+    fishToUpdate.setLocation(request.getLocation() == null ? fishToUpdate.getLocation() : request.getLocation());
+    fishToUpdate.setMethod(request.getMethod() == null ? fishToUpdate.getMethod() : request.getMethod());
+    fishToUpdate.setBait(request.getBait() == null ? fishToUpdate.getBait() : request.getBait());
+    fishToUpdate.setImgPath(request.getImgPath() == null ? fishToUpdate.getImgPath() : request.getImgPath()); // TODO
+
+    fishRepository.save(fishToUpdate);
+  }
+
 }
