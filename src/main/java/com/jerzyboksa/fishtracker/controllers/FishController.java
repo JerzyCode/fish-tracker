@@ -1,8 +1,9 @@
 package com.jerzyboksa.fishtracker.controllers;
 
+import com.jerzyboksa.fishtracker.exceptions.FishNotBelongsToUserException;
 import com.jerzyboksa.fishtracker.exceptions.NoAuthHeaderException;
-import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.models.dto.FishLightDto;
+import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.services.FishService;
 import com.jerzyboksa.fishtracker.services.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,14 @@ public class FishController {
     return ResponseEntity.ok(fishService.createFish(userId, request));
   }
 
+  @PutMapping
+  public ResponseEntity<Void> updateFish(@RequestParam Long fishId, @RequestBody SaveFishRequestDTO request)
+      throws NoAuthHeaderException, FishNotBelongsToUserException {
+    log.debug(String.format("updateFish(), fishId=%d, request=%s", fishId, request.toString()));
+    fishService.updateFish(fishId, getUserId(), request);
+    return ResponseEntity.ok().build();
+  }
+
   private Long getUserId() throws NoAuthHeaderException {
     var bearerPrefix = "Bearer ";
     var header = nativeWebRequest.getHeader("Authorization");
@@ -44,4 +53,5 @@ public class FishController {
     var token = header.contains(bearerPrefix) ? header.substring(bearerPrefix.length()) : header;
     return jwtService.extractUserId(token);
   }
+
 }

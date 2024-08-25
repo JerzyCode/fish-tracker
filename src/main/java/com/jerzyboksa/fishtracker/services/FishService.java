@@ -1,5 +1,6 @@
 package com.jerzyboksa.fishtracker.services;
 
+import com.jerzyboksa.fishtracker.exceptions.FishNotBelongsToUserException;
 import com.jerzyboksa.fishtracker.models.Fish;
 import com.jerzyboksa.fishtracker.models.dto.FishLightDto;
 import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +41,12 @@ public class FishService {
     return fishRepository.save(fish).getId();
   }
 
-  public void updateFish(Long fishId, SaveFishRequestDTO request) {
+  public void updateFish(Long fishId, Long userId, SaveFishRequestDTO request) throws FishNotBelongsToUserException {
     var fishToUpdate = fishRepository.findById(fishId).orElseThrow();
+
+    if (!doesFishBelongsToUser(fishToUpdate, userId)) {
+      throw new FishNotBelongsToUserException(userId);
+    }
 
     fishToUpdate.setDate(request.getDate() == null ? fishToUpdate.getDate() : request.getDate());
     fishToUpdate.setSpecie(request.getSpecie() == null ? fishToUpdate.getSpecie() : request.getSpecie());
@@ -52,6 +58,11 @@ public class FishService {
     fishToUpdate.setImgPath(request.getImgPath() == null ? fishToUpdate.getImgPath() : request.getImgPath()); // TODO
 
     fishRepository.save(fishToUpdate);
+  }
+
+  private boolean doesFishBelongsToUser(Fish fish, Long userId) {
+    var fishUser = fish.getUser();
+    return Objects.equals(fishUser.getId(), userId);
   }
 
 }

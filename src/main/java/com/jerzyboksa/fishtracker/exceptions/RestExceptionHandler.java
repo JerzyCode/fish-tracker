@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @ControllerAdvice
@@ -19,6 +20,18 @@ public class RestExceptionHandler {
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
     log.error("ConstraintViolationException, msg=" + ex.getMessage());
+    return createResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(NoSuchElementException.class)
+  public ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException ex) {
+    log.error("NoSuchElementException, msg=" + ex.getMessage());
+    return createResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(FishNotBelongsToUserException.class)
+  public ResponseEntity<Object> handleFishNotBelongsToUserException(FishNotBelongsToUserException ex) {
+    log.error("FishNotBelongsToUserException, msg=" + ex.getMessage());
     return createResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
   }
 

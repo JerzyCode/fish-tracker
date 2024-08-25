@@ -1,6 +1,7 @@
 package com.jerzyboksa.fishtracker.services;
 
 import com.jerzyboksa.fishtracker.TestHelper;
+import com.jerzyboksa.fishtracker.exceptions.FishNotBelongsToUserException;
 import com.jerzyboksa.fishtracker.models.Fish;
 import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.repositories.FishRepository;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -86,7 +88,7 @@ class FishServiceTest {
   }
 
   @Test
-  void update_fish_should_update_fish() {
+  void update_fish_should_update_fish() throws FishNotBelongsToUserException {
     //given
     var user = TestHelper.createUser(1L, "test@mail.com", "test");
     var fishToUpdate = TestHelper.createFish(1L, "Perch", user);
@@ -99,7 +101,7 @@ class FishServiceTest {
     when(fishRepository.findById(fishToUpdate.getId())).thenReturn(Optional.of(fishToUpdate));
 
     //when
-    sut.updateFish(fishToUpdate.getId(), request);
+    sut.updateFish(fishToUpdate.getId(), user.getId(), request);
 
     //then
     verify(fishRepository, times(1)).save(fishToUpdate);
@@ -108,4 +110,19 @@ class FishServiceTest {
     assertThat(fishToUpdate.getBait()).isEqualTo(request.getBait());
   }
 
+  @Test
+  void update_fish_should_throw_fish_not_belongs_to_user_exception() {
+    //given
+    var user = TestHelper.createUser(1L, "test@mail.com", "test");
+    var wrongUser = TestHelper.createUser(2L, "wrong@mail.com", "wrongUser");
+
+    var fishToUpdate = TestHelper.createFish(1L, "Perch", user);
+    var request = SaveFishRequestDTO.builder()
+        .specie("specieUpdate")
+        .build();
+    when(fishRepository.findById(fishToUpdate.getId())).thenReturn(Optional.of(fishToUpdate));
+
+    //when & then
+    assertThrows(FishNotBelongsToUserException.class, () -> sut.updateFish(fishToUpdate.getId(), wrongUser.getId(), request));
+  }
 }
