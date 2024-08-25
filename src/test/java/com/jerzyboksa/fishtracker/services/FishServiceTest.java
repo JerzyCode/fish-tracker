@@ -39,13 +39,11 @@ class FishServiceTest {
   void get_fishes_for_user_should_return_fishes_light() {
     //given
     var user1 = TestHelper.createUser(1L, "user1@mail.com", "user1");
-    var user2 = TestHelper.createUser(2L, "user2@mail.com", "user2");
 
     var fish1 = TestHelper.createFish(1L, "Pike", user1);
-    var fish2 = TestHelper.createFish(2L, "Pike", user2);
-    var fish3 = TestHelper.createFish(3L, "Perch", user1);
+    var fish2 = TestHelper.createFish(3L, "Perch", user1);
 
-    when(fishRepository.findAllByUserId(user1.getId())).thenReturn(List.of(fish1, fish3));
+    when(fishRepository.findAllByUserId(user1.getId())).thenReturn(List.of(fish1, fish2));
     //when
     var result = sut.getFishesForUser(user1.getId());
 
@@ -59,11 +57,11 @@ class FishServiceTest {
     assertThat(result.get(0).getSize()).isEqualTo(fish1.getSize());
     assertThat(result.get(0).getWeight()).isEqualTo(fish1.getWeight());
 
-    assertThat(result.get(1).getId()).isEqualTo(fish3.getId());
+    assertThat(result.get(1).getId()).isEqualTo(fish2.getId());
     assertThat(result.get(1).getDate()).isNotNull();
-    assertThat(result.get(1).getSpecie()).isEqualTo(fish3.getSpecie());
-    assertThat(result.get(1).getSize()).isEqualTo(fish3.getSize());
-    assertThat(result.get(1).getWeight()).isEqualTo(fish3.getWeight());
+    assertThat(result.get(1).getSpecie()).isEqualTo(fish2.getSpecie());
+    assertThat(result.get(1).getSize()).isEqualTo(fish2.getSize());
+    assertThat(result.get(1).getWeight()).isEqualTo(fish2.getWeight());
   }
 
   @Test
@@ -124,5 +122,32 @@ class FishServiceTest {
 
     //when & then
     assertThrows(FishNotBelongsToUserException.class, () -> sut.updateFish(fishToUpdate.getId(), wrongUser.getId(), request));
+  }
+
+  @Test
+  void delete_fish_should_delete_fish() throws FishNotBelongsToUserException {
+    //given
+    var user = TestHelper.createUser(1L, "test@mail.com", "test");
+    var fishToDelete = TestHelper.createFish(1L, "Perch", user);
+
+    when(fishRepository.findById(fishToDelete.getId())).thenReturn(Optional.of(fishToDelete));
+
+    //when
+    sut.deleteFish(fishToDelete.getId(), user.getId());
+
+    //then
+    verify(fishRepository, times(1)).delete(fishToDelete);
+  }
+
+  @Test
+  void delete_fish_should_throw_fish_not_belongs_to_user_exception() {
+    //given
+    var user = TestHelper.createUser(1L, "test@mail.com", "test");
+    var wrongUser = TestHelper.createUser(2L, "wrong@mail.com", "wrongUser");
+    var fishToDelete = TestHelper.createFish(1L, "Perch", user);
+    when(fishRepository.findById(fishToDelete.getId())).thenReturn(Optional.of(fishToDelete));
+
+    //when & then
+    assertThrows(FishNotBelongsToUserException.class, () -> sut.deleteFish(fishToDelete.getId(), wrongUser.getId()));
   }
 }

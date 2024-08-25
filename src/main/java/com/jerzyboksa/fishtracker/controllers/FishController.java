@@ -44,6 +44,14 @@ public class FishController {
     return ResponseEntity.ok().build();
   }
 
+  @DeleteMapping
+  public ResponseEntity<Void> deleteFish(@RequestParam Long fishId)
+      throws NoAuthHeaderException, FishNotBelongsToUserException {
+    log.debug(String.format("delete(), fishId=%d", fishId));
+    fishService.deleteFish(fishId, getUserId());
+    return ResponseEntity.ok().build();
+  }
+
   private Long getUserId() throws NoAuthHeaderException {
     var bearerPrefix = "Bearer ";
     var header = nativeWebRequest.getHeader("Authorization");

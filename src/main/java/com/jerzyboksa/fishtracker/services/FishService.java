@@ -44,7 +44,7 @@ public class FishService {
   public void updateFish(Long fishId, Long userId, SaveFishRequestDTO request) throws FishNotBelongsToUserException {
     var fishToUpdate = fishRepository.findById(fishId).orElseThrow();
 
-    if (!doesFishBelongsToUser(fishToUpdate, userId)) {
+    if (doesFishNotBelongToUser(fishToUpdate, userId)) {
       throw new FishNotBelongsToUserException(userId);
     }
 
@@ -60,9 +60,19 @@ public class FishService {
     fishRepository.save(fishToUpdate);
   }
 
-  private boolean doesFishBelongsToUser(Fish fish, Long userId) {
+  public void deleteFish(Long fishId, Long userId) throws FishNotBelongsToUserException {
+    var fishToDelete = fishRepository.findById(fishId).orElseThrow();
+
+    if (doesFishNotBelongToUser(fishToDelete, userId)) {
+      throw new FishNotBelongsToUserException(userId);
+    }
+
+    fishRepository.delete(fishToDelete);
+  }
+
+  private boolean doesFishNotBelongToUser(Fish fish, Long userId) {
     var fishUser = fish.getUser();
-    return Objects.equals(fishUser.getId(), userId);
+    return !Objects.equals(fishUser.getId(), userId);
   }
 
 }
