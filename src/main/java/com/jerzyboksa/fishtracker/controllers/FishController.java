@@ -1,7 +1,7 @@
 package com.jerzyboksa.fishtracker.controllers;
 
 import com.jerzyboksa.fishtracker.exceptions.NoAuthHeaderException;
-import com.jerzyboksa.fishtracker.models.dto.CreateFishRequestDTO;
+import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.models.dto.FishLightDto;
 import com.jerzyboksa.fishtracker.services.FishService;
 import com.jerzyboksa.fishtracker.services.JwtService;
@@ -29,7 +29,7 @@ public class FishController {
   }
 
   @PostMapping
-  public ResponseEntity<Long> createFish(@RequestBody CreateFishRequestDTO request) throws NoAuthHeaderException {
+  public ResponseEntity<Long> createFish(@RequestBody SaveFishRequestDTO request) throws NoAuthHeaderException {
     var userId = getUserId();
     log.debug(String.format("createFish(), userId=%d, request=%s", userId, request.toString()));
     return ResponseEntity.ok(fishService.createFish(userId, request));

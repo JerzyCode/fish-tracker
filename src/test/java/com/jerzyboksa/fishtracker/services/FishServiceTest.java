@@ -2,7 +2,7 @@ package com.jerzyboksa.fishtracker.services;
 
 import com.jerzyboksa.fishtracker.TestHelper;
 import com.jerzyboksa.fishtracker.models.Fish;
-import com.jerzyboksa.fishtracker.models.dto.CreateFishRequestDTO;
+import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.repositories.FishRepository;
 import com.jerzyboksa.fishtracker.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,7 +67,7 @@ class FishServiceTest {
   @Test
   void create_fish_should_create_fish() {
     //given
-    var request = CreateFishRequestDTO.builder()
+    var request = SaveFishRequestDTO.builder()
         .specie("specie")
         .date(LocalDate.now())
         .location("location")

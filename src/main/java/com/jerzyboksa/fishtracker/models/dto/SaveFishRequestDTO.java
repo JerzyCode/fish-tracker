@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-public class CreateFishRequestDTO {
+public class SaveFishRequestDTO {
   private LocalDate date;
   private String specie;
   private Double size;

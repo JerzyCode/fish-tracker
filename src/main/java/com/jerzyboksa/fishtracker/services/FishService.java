@@ -1,7 +1,7 @@
 package com.jerzyboksa.fishtracker.services;
 
 import com.jerzyboksa.fishtracker.models.Fish;
-import com.jerzyboksa.fishtracker.models.dto.CreateFishRequestDTO;
+import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.models.dto.FishLightDto;
 import com.jerzyboksa.fishtracker.repositories.FishRepository;
 import com.jerzyboksa.fishtracker.repositories.UserRepository;
@@ -22,7 +22,7 @@ public class FishService {
         .toList();
   }
 
-  public Long createFish(Long userId, CreateFishRequestDTO request) {
+  public Long createFish(Long userId, SaveFishRequestDTO request) {
     var user = userRepository.findById(userId).orElseThrow();
     var fish = Fish.builder()
         .date(request.getDate())
