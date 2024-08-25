@@ -3,7 +3,6 @@ package com.jerzyboksa.fishtracker.integration;
 import com.jerzyboksa.fishtracker.models.User;
 import com.jerzyboksa.fishtracker.models.dto.RegisterRequestDTO;
 import com.jerzyboksa.fishtracker.repositories.UserRepository;
-import com.jerzyboksa.fishtracker.services.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthControllerTest {
-
-  @Autowired
-  private AuthService authService;
   @Autowired
   private UserRepository userRepository;
   @Autowired

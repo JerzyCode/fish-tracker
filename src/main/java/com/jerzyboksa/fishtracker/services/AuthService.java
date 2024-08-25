@@ -2,11 +2,14 @@ package com.jerzyboksa.fishtracker.services;
 
 import com.jerzyboksa.fishtracker.exceptions.UsernameTakenException;
 import com.jerzyboksa.fishtracker.models.User;
+import com.jerzyboksa.fishtracker.models.dto.LoginRequestDTO;
 import com.jerzyboksa.fishtracker.models.dto.RegisterRequestDTO;
 import com.jerzyboksa.fishtracker.models.responses.AuthResponse;
 import com.jerzyboksa.fishtracker.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,10 +39,15 @@ public class AuthService {
     );
   }
 
-  private AuthResponse buildAuthenticationResponse(String jwtToken) {
-    String username = jwtService.extractUsername(jwtToken);
-    Long id = jwtService.extractUserId(jwtToken);
-    Long expirationDate = jwtService.extractExpiration(jwtToken).getTime();
-    return new AuthResponse(jwtToken, username, id, expirationDate);
+  public AuthResponse login(LoginRequestDTO requestDTO) {
+    var user = repository.findByEmail(requestDTO.email()).orElseThrow(() -> new BadCredentialsException("Bad Credentials"));
+    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestDTO.email(), requestDTO.password()));
+    var jwtToken = jwtService.buildToken(user);
+
+    return new AuthResponse(jwtToken,
+        jwtService.extractUsername(jwtToken),
+        jwtService.extractUserId(jwtToken),
+        jwtService.extractExpiration(jwtToken).getTime());
   }
+
 }
