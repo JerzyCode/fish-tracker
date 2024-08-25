@@ -98,7 +98,7 @@ class AuthServiceTest {
     assertThat(response.token()).isNotNull();
     assertThat(response.userId()).isNotNull();
     assertThat(response.expirationDate()).isNotNull();
-    assertThat(response.username()).isEqualTo(savedUser.getEmail());
+    assertThat(response.email()).isEqualTo(savedUser.getEmail());
     verify(authManager, times(1)).authenticate(any());
   }
 

@@ -1,7 +1,9 @@
 package com.jerzyboksa.fishtracker.controllers;
 
 import com.jerzyboksa.fishtracker.exceptions.UsernameTakenException;
+import com.jerzyboksa.fishtracker.models.dto.LoginRequestDTO;
 import com.jerzyboksa.fishtracker.models.dto.RegisterRequestDTO;
+import com.jerzyboksa.fishtracker.models.responses.AuthResponse;
 import com.jerzyboksa.fishtracker.services.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +23,15 @@ public class AuthController {
 
   @PostMapping("/register")
   public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequestDTO request) throws UsernameTakenException {
-    log.info("register(), email=" + request.email());
+    log.debug("register(), email=" + request.email());
     authService.register(request);
     return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequestDTO request) {
+    log.debug("login(), email=" + request.email());
+    return ResponseEntity.ok(authService.login(request));
   }
 
 }

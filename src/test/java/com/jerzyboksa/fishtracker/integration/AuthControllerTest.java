@@ -1,7 +1,9 @@
 package com.jerzyboksa.fishtracker.integration;
 
 import com.jerzyboksa.fishtracker.models.User;
+import com.jerzyboksa.fishtracker.models.dto.LoginRequestDTO;
 import com.jerzyboksa.fishtracker.models.dto.RegisterRequestDTO;
+import com.jerzyboksa.fishtracker.models.responses.AuthResponse;
 import com.jerzyboksa.fishtracker.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,4 +75,42 @@ public class AuthControllerTest {
     //then
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
+
+  @Test
+  void login_should_return_ok() {
+    //given
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    String password = "password";
+    var existingUser = userRepository.save(
+        User.builder()
+            .name("test")
+            .email("test@mail.com")
+            .password(encoder.encode(password))
+            .build());
+
+    var request = new LoginRequestDTO(existingUser.getEmail(), password);
+
+    //when
+    var response = restTemplate.postForEntity("/auth/login", request, AuthResponse.class);
+
+    //then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().email()).isEqualTo(existingUser.getEmail());
+    assertThat(response.getBody().token()).isNotNull();
+  }
+
+  @Test
+  void login_should_return_bad_request_wrong_credentials() {
+    //given
+
+    var request = new LoginRequestDTO("test@mail.com", "password");
+
+    //when
+    var response = restTemplate.postForEntity("/auth/login", request, AuthResponse.class);
+
+    //then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
 }
