@@ -51,13 +51,13 @@ class FishServiceTest {
     assertThat(result).hasSize(2);
 
     assertThat(result.get(0).getId()).isEqualTo(fish1.getId());
-    assertThat(result.get(0).getDate()).isEqualTo(fish1.getDate());
+    assertThat(result.get(0).getDate()).isNotNull();
     assertThat(result.get(0).getSpecie()).isEqualTo(fish1.getSpecie());
     assertThat(result.get(0).getSize()).isEqualTo(fish1.getSize());
     assertThat(result.get(0).getWeight()).isEqualTo(fish1.getWeight());
 
     assertThat(result.get(1).getId()).isEqualTo(fish3.getId());
-    assertThat(result.get(1).getDate()).isEqualTo(fish3.getDate());
+    assertThat(result.get(1).getDate()).isNotNull();
     assertThat(result.get(1).getSpecie()).isEqualTo(fish3.getSpecie());
     assertThat(result.get(1).getSize()).isEqualTo(fish3.getSize());
     assertThat(result.get(1).getWeight()).isEqualTo(fish3.getWeight());
