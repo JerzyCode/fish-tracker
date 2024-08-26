@@ -30,8 +30,8 @@ public class FishController {
     return ResponseEntity.ok(fishService.getFishesForUser(userId));
   }
 
-  @GetMapping
-  public ResponseEntity<FishDetailsDTO> getFishDetails(@RequestParam Long fishId) {
+  @GetMapping("/{fishId}")
+  public ResponseEntity<FishDetailsDTO> getFishDetails(@PathVariable Long fishId) {
     log.debug("getFishDetails(), fishId=" + fishId);
     return ResponseEntity.ok(fishService.getFishDetails(fishId));
   }
