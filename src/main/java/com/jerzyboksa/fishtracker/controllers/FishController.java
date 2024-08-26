@@ -79,11 +79,11 @@ public class FishController {
     return ResponseEntity.ok().build();
   }
 
-  //TODO delete image during delete fish
   @DeleteMapping
   public ResponseEntity<Void> deleteFish(@RequestParam Long fishId)
-      throws NoAuthHeaderException, FishNotBelongsToUserException {
+      throws NoAuthHeaderException, FishNotBelongsToUserException, ImageNotDeletedException {
     log.debug(String.format("delete(), fishId=%d", fishId));
+    imageService.deleteImage(fishService.getFishImageName(fishId));
     fishService.deleteFish(fishId, getUserId());
     return ResponseEntity.ok().build();
   }
