@@ -29,7 +29,7 @@ public class Fish {
   private String location;
   private String method;
   private String bait;
-  private String imgPath;
+  private String imageName;
 
   @ManyToOne
   @JoinColumn(name = "user_id")

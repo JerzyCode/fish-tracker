@@ -29,6 +29,12 @@ public class RestExceptionHandler {
     return createResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(ImageSaveFailException.class)
+  public ResponseEntity<Object> handleImageSaveFailException(ImageSaveFailException ex) {
+    log.error("handleImageSaveFailException, msg=" + ex.getMessage());
+    return createResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(FishNotBelongsToUserException.class)
   public ResponseEntity<Object> handleFishNotBelongsToUserException(FishNotBelongsToUserException ex) {
     log.error("FishNotBelongsToUserException, msg=" + ex.getMessage());

@@ -38,13 +38,13 @@ public class FishService {
         .location(fish.getLocation())
         .method(fish.getMethod())
         .bait(fish.getBait())
-        .imgPath(fish.getImgPath())//TODO
+        .imageName(fish.getImageName())//TODO
         .userId(user.getId())
         .username(user.getUsername())
         .build();
   }
 
-  public Long createFish(Long userId, SaveFishRequestDTO request) {
+  public Long createFish(Long userId, SaveFishRequestDTO request, String imageName) {
     var user = userRepository.findById(userId).orElseThrow();
     var fish = Fish.builder()
         .date(request.getDate())
@@ -54,7 +54,7 @@ public class FishService {
         .location(request.getLocation())
         .method(request.getMethod())
         .bait(request.getBait())
-        .imgPath("") //TODO save picture and create path
+        .imageName(imageName)
         .user(user)
         .build();
 
@@ -75,7 +75,7 @@ public class FishService {
     fishToUpdate.setLocation(request.getLocation() == null ? fishToUpdate.getLocation() : request.getLocation());
     fishToUpdate.setMethod(request.getMethod() == null ? fishToUpdate.getMethod() : request.getMethod());
     fishToUpdate.setBait(request.getBait() == null ? fishToUpdate.getBait() : request.getBait());
-    fishToUpdate.setImgPath(request.getImgPath() == null ? fishToUpdate.getImgPath() : request.getImgPath()); // TODO
+    //    fishToUpdate.setImageName(request.getImgPath() == null ? fishToUpdate.getImgPath() : request.getImgPath()); // TODO
 
     fishRepository.save(fishToUpdate);
   }

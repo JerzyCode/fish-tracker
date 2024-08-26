@@ -1,17 +1,20 @@
 package com.jerzyboksa.fishtracker.controllers;
 
 import com.jerzyboksa.fishtracker.exceptions.FishNotBelongsToUserException;
+import com.jerzyboksa.fishtracker.exceptions.ImageSaveFailException;
 import com.jerzyboksa.fishtracker.exceptions.NoAuthHeaderException;
 import com.jerzyboksa.fishtracker.models.dto.FishDetailsDTO;
 import com.jerzyboksa.fishtracker.models.dto.FishLightDto;
 import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.services.FishService;
+import com.jerzyboksa.fishtracker.services.ImageService;
 import com.jerzyboksa.fishtracker.services.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,6 +25,7 @@ import java.util.List;
 public class FishController {
   private final FishService fishService;
   private final JwtService jwtService;
+  private final ImageService imageService;
   private final NativeWebRequest nativeWebRequest;
 
   @GetMapping
@@ -36,11 +40,14 @@ public class FishController {
     return ResponseEntity.ok(fishService.getFishDetails(fishId));
   }
 
-  @PostMapping
-  public ResponseEntity<Long> createFish(@RequestBody SaveFishRequestDTO request) throws NoAuthHeaderException {
+  @PostMapping //TODO image validation jako adnotacja
+  public ResponseEntity<Long> createFish(@ModelAttribute SaveFishRequestDTO request, @RequestParam MultipartFile image)
+      throws NoAuthHeaderException, ImageSaveFailException {
     var userId = getUserId();
     log.debug(String.format("createFish(), userId=%d, request=%s", userId, request.toString()));
-    return ResponseEntity.ok(fishService.createFish(userId, request));
+    var imgName = imageService.saveImage(image);
+
+    return ResponseEntity.ok(fishService.createFish(userId, request, imgName));
   }
 
   @PutMapping

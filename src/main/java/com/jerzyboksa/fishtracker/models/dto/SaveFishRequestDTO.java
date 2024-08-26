@@ -15,5 +15,4 @@ public class SaveFishRequestDTO {
   private String location;
   private String method;
   private String bait;
-  private String imgPath; //TODO tutaj image ma przyjść jako cos innego nie string
 }

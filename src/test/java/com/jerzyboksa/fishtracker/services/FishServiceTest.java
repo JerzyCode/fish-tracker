@@ -83,7 +83,7 @@ class FishServiceTest {
     assertThat(result.getLocation()).isEqualTo(fish.getLocation());
     assertThat(result.getMethod()).isEqualTo(fish.getMethod());
     assertThat(result.getBait()).isEqualTo(fish.getBait());
-    assertThat(result.getImgPath()).isEqualTo(fish.getImgPath());
+    assertThat(result.getImageName()).isEqualTo(fish.getImageName());
     assertThat(result.getUserId()).isEqualTo(user.getId());
     assertThat(result.getUsername()).isEqualTo(user.getUsername());
   }
@@ -91,6 +91,7 @@ class FishServiceTest {
   @Test
   void create_fish_should_create_fish() {
     //given
+    var imgPath = "imgPath";
     var request = SaveFishRequestDTO.builder()
         .specie("specie")
         .date(LocalDate.now())
@@ -102,7 +103,7 @@ class FishServiceTest {
     when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
     when(fishRepository.save(any())).thenReturn(Fish.builder().id(1L).build());
     //when
-    var result = sut.createFish(user.getId(), request);
+    var result = sut.createFish(user.getId(), request, imgPath);
 
     //then
     assertThat(result).isEqualTo(1L);

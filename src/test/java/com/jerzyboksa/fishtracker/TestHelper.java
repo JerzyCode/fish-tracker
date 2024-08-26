@@ -19,7 +19,7 @@ public class TestHelper {
         .location("location")
         .method("method")
         .bait("bait")
-        .imgPath("imgPath")
+        .imageName("imgPath")
         .user(user)
         .build();
   }
