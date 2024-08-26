@@ -29,6 +29,12 @@ public class RestExceptionHandler {
     return createResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(ImageNotFoundException.class)
+  public ResponseEntity<Object> handleImageNotFoundException(ImageNotFoundException ex) {
+    log.error("ImageNotFoundException, msg=" + ex.getMessage());
+    return createResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(ImageSaveFailException.class)
   public ResponseEntity<Object> handleImageSaveFailException(ImageSaveFailException ex) {
     log.error("handleImageSaveFailException, msg=" + ex.getMessage());

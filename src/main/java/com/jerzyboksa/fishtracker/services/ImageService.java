@@ -1,6 +1,9 @@
 package com.jerzyboksa.fishtracker.services;
 
+import com.jerzyboksa.fishtracker.exceptions.ImageNotFoundException;
 import com.jerzyboksa.fishtracker.exceptions.ImageSaveFailException;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,8 +36,20 @@ public class ImageService {
       return path;
     }
     catch (IOException ex) {
-      ex.printStackTrace();
       throw new ImageSaveFailException();
+    }
+  }
+
+  public Resource getImage(String imageName) throws ImageNotFoundException {
+    try {
+      ClassPathResource resource = new ClassPathResource("static/assets/" + imageName);
+      if (!resource.exists()) {
+        throw new ImageNotFoundException(imageName);
+      }
+      return resource;
+    }
+    catch (Exception e) {
+      throw new ImageNotFoundException(imageName);
     }
   }
 
