@@ -38,10 +38,14 @@ public class FishService {
         .location(fish.getLocation())
         .method(fish.getMethod())
         .bait(fish.getBait())
-        .imageName(fish.getImageName())//TODO
         .userId(user.getId())
         .username(user.getUsername())
         .build();
+  }
+
+  public String getFishImageName(Long fishId) {
+    var fish = fishRepository.findById(fishId).orElseThrow();
+    return fish.getImageName();
   }
 
   public Long createFish(Long userId, SaveFishRequestDTO request, String imageName) {

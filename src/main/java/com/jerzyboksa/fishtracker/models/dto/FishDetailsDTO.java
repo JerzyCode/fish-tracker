@@ -16,7 +16,6 @@ public class FishDetailsDTO {
   private String location;
   private String method;
   private String bait;
-  private String imageName;
   private Long userId;
   private String username;
 }

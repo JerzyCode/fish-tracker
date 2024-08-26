@@ -83,9 +83,22 @@ class FishServiceTest {
     assertThat(result.getLocation()).isEqualTo(fish.getLocation());
     assertThat(result.getMethod()).isEqualTo(fish.getMethod());
     assertThat(result.getBait()).isEqualTo(fish.getBait());
-    assertThat(result.getImageName()).isEqualTo(fish.getImageName());
     assertThat(result.getUserId()).isEqualTo(user.getId());
     assertThat(result.getUsername()).isEqualTo(user.getUsername());
+  }
+
+  @Test
+  void get_fish_image_name_should_return_image_name() {
+    //given
+    var user = TestHelper.createUser(1L, "user@mail.com", "user");
+    var fish = TestHelper.createFish(1L, "specie", user);
+    when(fishRepository.findById(fish.getId())).thenReturn(Optional.of(fish));
+
+    //when
+    var result = sut.getFishImageName(fish.getId());
+
+    //then
+    assertThat(result).isEqualTo(fish.getImageName());
   }
 
   @Test

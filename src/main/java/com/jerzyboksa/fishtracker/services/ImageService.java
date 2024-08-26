@@ -33,7 +33,7 @@ public class ImageService {
 
       image.transferTo(destination);
 
-      return path;
+      return imageName + "." + extension;
     }
     catch (IOException ex) {
       throw new ImageSaveFailException();

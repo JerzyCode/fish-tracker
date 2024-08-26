@@ -9,9 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageFileValidator implements ConstraintValidator<ValidImage, MultipartFile> {
   private long maxSize;
   private static final String TOO_BIG_FILE = "Rozmiar pliku jest zbyt duży";
-  private static final String ATTACHMENTS_DISABLED = "Załączniki są wyłączone";
   private static final String BAD_EXTENSION_FILE = "Plik posiada niepoprawne rozszerzenie";
-  private static final String INVALID_FILE_NAME = "Niewłaściwa nazwa załącznika";
 
   @Override
   public void initialize(ValidImage constraintAnnotation) {
@@ -20,6 +18,9 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
 
   @Override
   public boolean isValid(MultipartFile file, ConstraintValidatorContext context) {
+    if (file == null || file.isEmpty()) {
+      return true;
+    }
     String fileName = file.getOriginalFilename();
     String contentType = file.getContentType();
 
