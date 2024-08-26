@@ -9,6 +9,7 @@ import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.services.FishService;
 import com.jerzyboksa.fishtracker.services.ImageService;
 import com.jerzyboksa.fishtracker.services.JwtService;
+import com.jerzyboksa.fishtracker.services.validation.ValidImage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -40,12 +41,19 @@ public class FishController {
     return ResponseEntity.ok(fishService.getFishDetails(fishId));
   }
 
-  @PostMapping //TODO image validation jako adnotacja
-  public ResponseEntity<Long> createFish(@ModelAttribute SaveFishRequestDTO request, @RequestParam MultipartFile image)
+  @PostMapping
+  public ResponseEntity<Long> createFish(@ModelAttribute SaveFishRequestDTO request, @RequestParam @ValidImage MultipartFile image)
       throws NoAuthHeaderException, ImageSaveFailException {
     var userId = getUserId();
     log.debug(String.format("createFish(), userId=%d, request=%s", userId, request.toString()));
-    var imgName = imageService.saveImage(image);
+
+    String imgName;
+    if (image == null || image.isEmpty()) {
+      imgName = "image_not_found.jpg";
+    }
+    else {
+      imgName = imageService.saveImage(image);
+    }
 
     return ResponseEntity.ok(fishService.createFish(userId, request, imgName));
   }
