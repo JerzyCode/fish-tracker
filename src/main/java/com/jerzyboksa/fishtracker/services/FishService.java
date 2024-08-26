@@ -2,6 +2,7 @@ package com.jerzyboksa.fishtracker.services;
 
 import com.jerzyboksa.fishtracker.exceptions.FishNotBelongsToUserException;
 import com.jerzyboksa.fishtracker.models.Fish;
+import com.jerzyboksa.fishtracker.models.dto.FishDetailsDTO;
 import com.jerzyboksa.fishtracker.models.dto.FishLightDto;
 import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.repositories.FishRepository;
@@ -22,6 +23,25 @@ public class FishService {
     return fishRepository.findAllByUserId(userId).stream()
         .map(FishLightDto::of)
         .toList();
+  }
+
+  public FishDetailsDTO getFishDetails(Long fishId) {
+    var fish = fishRepository.findById(fishId).orElseThrow();
+    var user = fish.getUser();
+
+    return FishDetailsDTO.builder()
+        .id(fish.getId())
+        .date(fish.getDate())
+        .specie(fish.getSpecie())
+        .size(fish.getSize())
+        .weight(fish.getWeight())
+        .location(fish.getLocation())
+        .method(fish.getMethod())
+        .bait(fish.getBait())
+        .imgPath(fish.getImgPath())//TODO
+        .userId(user.getId())
+        .username(user.getUsername())
+        .build();
   }
 
   public Long createFish(Long userId, SaveFishRequestDTO request) {

@@ -2,6 +2,7 @@ package com.jerzyboksa.fishtracker.controllers;
 
 import com.jerzyboksa.fishtracker.exceptions.FishNotBelongsToUserException;
 import com.jerzyboksa.fishtracker.exceptions.NoAuthHeaderException;
+import com.jerzyboksa.fishtracker.models.dto.FishDetailsDTO;
 import com.jerzyboksa.fishtracker.models.dto.FishLightDto;
 import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.services.FishService;
@@ -27,6 +28,12 @@ public class FishController {
   public ResponseEntity<List<FishLightDto>> getFishesLightForUser(@RequestParam Long userId) {
     log.debug("getFishesLightForUser(), userId=" + userId);
     return ResponseEntity.ok(fishService.getFishesForUser(userId));
+  }
+
+  @GetMapping
+  public ResponseEntity<FishDetailsDTO> getFishDetails(@RequestParam Long fishId) {
+    log.debug("getFishDetails(), fishId=" + fishId);
+    return ResponseEntity.ok(fishService.getFishDetails(fishId));
   }
 
   @PostMapping

@@ -65,6 +65,30 @@ class FishServiceTest {
   }
 
   @Test
+  void get_fish_details_should_return_fish_details() {
+    //given
+    var user = TestHelper.createUser(1L, "user@mail.com", "user");
+    var fish = TestHelper.createFish(1L, "specie", user);
+    when(fishRepository.findById(fish.getId())).thenReturn(Optional.of(fish));
+
+    //when
+    var result = sut.getFishDetails(fish.getId());
+
+    //then
+    assertThat(result.getId()).isEqualTo(fish.getId());
+    assertThat(result.getDate()).isEqualTo(fish.getDate());
+    assertThat(result.getSpecie()).isEqualTo(fish.getSpecie());
+    assertThat(result.getSize()).isEqualTo(fish.getSize());
+    assertThat(result.getWeight()).isEqualTo(fish.getWeight());
+    assertThat(result.getLocation()).isEqualTo(fish.getLocation());
+    assertThat(result.getMethod()).isEqualTo(fish.getMethod());
+    assertThat(result.getBait()).isEqualTo(fish.getBait());
+    assertThat(result.getImgPath()).isEqualTo(fish.getImgPath());
+    assertThat(result.getUserId()).isEqualTo(user.getId());
+    assertThat(result.getUsername()).isEqualTo(user.getUsername());
+  }
+
+  @Test
   void create_fish_should_create_fish() {
     //given
     var request = SaveFishRequestDTO.builder()
