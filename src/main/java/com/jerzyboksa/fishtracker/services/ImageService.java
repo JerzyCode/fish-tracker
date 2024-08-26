@@ -1,7 +1,9 @@
 package com.jerzyboksa.fishtracker.services;
 
+import com.jerzyboksa.fishtracker.exceptions.ImageNotDeletedException;
 import com.jerzyboksa.fishtracker.exceptions.ImageNotFoundException;
 import com.jerzyboksa.fishtracker.exceptions.ImageSaveFailException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -12,12 +14,18 @@ import java.io.IOException;
 import java.time.Instant;
 
 @Service
+@Slf4j
 public class ImageService {
 
   private static final String IMAGE_BASE_PATH = new File("src/main/resources/static/assets").getAbsolutePath();
+  private static final String IMAGE_NOT_FOUND_JPG = "image_not_found.jpg";
 
   public String saveImage(MultipartFile image) throws ImageSaveFailException {
     try {
+      if (image == null || image.isEmpty()) {
+        return IMAGE_NOT_FOUND_JPG;
+      }
+
       String originalFilename = image.getOriginalFilename();
       String extension = originalFilename != null && originalFilename.contains(".")
           ? originalFilename.substring(originalFilename.lastIndexOf(".") + 1)
@@ -51,6 +59,27 @@ public class ImageService {
     catch (Exception e) {
       throw new ImageNotFoundException(imageName);
     }
+  }
+
+  public void deleteImage(String imageName) throws ImageNotDeletedException {
+    if (imageName.equals(IMAGE_NOT_FOUND_JPG)) {
+      return;
+    }
+    String path = IMAGE_BASE_PATH + File.separator + imageName;
+
+    File file = new File(path);
+    if (file.exists()) {
+      var isDeleted = file.delete();
+      if (!isDeleted) {
+        log.error("Delete failed, deletePath=" + path);
+        throw new ImageNotDeletedException(imageName);
+      }
+    }
+    else {
+      log.error("Image not exist, path=" + path);
+      throw new ImageNotDeletedException(imageName);
+    }
+
   }
 
   private String generateImageName() {

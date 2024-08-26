@@ -41,6 +41,12 @@ public class RestExceptionHandler {
     return createResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(ImageNotDeletedException.class)
+  public ResponseEntity<Object> handleImageNotDeletedException(ImageNotDeletedException ex) {
+    log.error("handleImageNotDeletedException, msg=" + ex.getMessage());
+    return createResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(FishNotBelongsToUserException.class)
   public ResponseEntity<Object> handleFishNotBelongsToUserException(FishNotBelongsToUserException ex) {
     log.error("FishNotBelongsToUserException, msg=" + ex.getMessage());

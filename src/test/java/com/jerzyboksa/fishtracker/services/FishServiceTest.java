@@ -134,16 +134,18 @@ class FishServiceTest {
         .location("locationUpdated")
         .bait("baitUpdated")
         .build();
+    var imageName = "imageName";
     when(fishRepository.findById(fishToUpdate.getId())).thenReturn(Optional.of(fishToUpdate));
 
     //when
-    sut.updateFish(fishToUpdate.getId(), user.getId(), request);
+    sut.updateFish(fishToUpdate.getId(), user.getId(), request, imageName);
 
     //then
     verify(fishRepository, times(1)).save(fishToUpdate);
     assertThat(fishToUpdate.getDate()).isEqualTo(request.getDate());
     assertThat(fishToUpdate.getLocation()).isEqualTo(request.getLocation());
     assertThat(fishToUpdate.getBait()).isEqualTo(request.getBait());
+    assertThat(fishToUpdate.getImageName()).isEqualTo(imageName);
   }
 
   @Test
@@ -159,7 +161,7 @@ class FishServiceTest {
     when(fishRepository.findById(fishToUpdate.getId())).thenReturn(Optional.of(fishToUpdate));
 
     //when & then
-    assertThrows(FishNotBelongsToUserException.class, () -> sut.updateFish(fishToUpdate.getId(), wrongUser.getId(), request));
+    assertThrows(FishNotBelongsToUserException.class, () -> sut.updateFish(fishToUpdate.getId(), wrongUser.getId(), request, null));
   }
 
   @Test

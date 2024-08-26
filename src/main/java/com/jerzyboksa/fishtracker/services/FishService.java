@@ -65,7 +65,7 @@ public class FishService {
     return fishRepository.save(fish).getId();
   }
 
-  public void updateFish(Long fishId, Long userId, SaveFishRequestDTO request) throws FishNotBelongsToUserException {
+  public void updateFish(Long fishId, Long userId, SaveFishRequestDTO request, String imageName) throws FishNotBelongsToUserException {
     var fishToUpdate = fishRepository.findById(fishId).orElseThrow();
 
     if (doesFishNotBelongToUser(fishToUpdate, userId)) {
@@ -79,7 +79,7 @@ public class FishService {
     fishToUpdate.setLocation(request.getLocation() == null ? fishToUpdate.getLocation() : request.getLocation());
     fishToUpdate.setMethod(request.getMethod() == null ? fishToUpdate.getMethod() : request.getMethod());
     fishToUpdate.setBait(request.getBait() == null ? fishToUpdate.getBait() : request.getBait());
-    //    fishToUpdate.setImageName(request.getImgPath() == null ? fishToUpdate.getImgPath() : request.getImgPath()); // TODO
+    fishToUpdate.setImageName(imageName == null ? fishToUpdate.getImageName() : imageName);
 
     fishRepository.save(fishToUpdate);
   }

@@ -1,9 +1,6 @@
 package com.jerzyboksa.fishtracker.controllers;
 
-import com.jerzyboksa.fishtracker.exceptions.FishNotBelongsToUserException;
-import com.jerzyboksa.fishtracker.exceptions.ImageNotFoundException;
-import com.jerzyboksa.fishtracker.exceptions.ImageSaveFailException;
-import com.jerzyboksa.fishtracker.exceptions.NoAuthHeaderException;
+import com.jerzyboksa.fishtracker.exceptions.*;
 import com.jerzyboksa.fishtracker.models.dto.FishDetailsDTO;
 import com.jerzyboksa.fishtracker.models.dto.FishLightDto;
 import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
@@ -61,23 +58,24 @@ public class FishController {
     var userId = getUserId();
     log.debug(String.format("createFish(), userId=%d, request=%s", userId, request.toString()));
 
-    String imgName;
-    if (image == null || image.isEmpty()) {
-      imgName = "image_not_found.jpg";
-    }
-    else {
-      imgName = imageService.saveImage(image);
-    }
-
+    String imgName = imageService.saveImage(image);
     return ResponseEntity.ok(fishService.createFish(userId, request, imgName));
   }
 
-  //TODO update image
   @PutMapping
-  public ResponseEntity<Void> updateFish(@RequestParam Long fishId, @RequestBody SaveFishRequestDTO request)
-      throws NoAuthHeaderException, FishNotBelongsToUserException {
+  public ResponseEntity<Void> updateFish(@RequestParam Long fishId, @ModelAttribute SaveFishRequestDTO request,
+      @RequestParam(required = false) @ValidImage MultipartFile image)
+      throws NoAuthHeaderException, FishNotBelongsToUserException, ImageSaveFailException, ImageNotDeletedException {
     log.debug(String.format("updateFish(), fishId=%d, request=%s", fishId, request.toString()));
-    fishService.updateFish(fishId, getUserId(), request);
+
+    String imgName = null;
+    if (image != null && !image.isEmpty()) {
+      var oldImageName = fishService.getFishImageName(fishId);
+      imageService.deleteImage(oldImageName);
+      imgName = imageService.saveImage(image);
+    }
+
+    fishService.updateFish(fishId, getUserId(), request, imgName);
     return ResponseEntity.ok().build();
   }
 
