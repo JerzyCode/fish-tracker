@@ -4,7 +4,8 @@ import com.jerzyboksa.fishtracker.exceptions.ImageNotDeletedException;
 import com.jerzyboksa.fishtracker.exceptions.ImageNotFoundException;
 import com.jerzyboksa.fishtracker.exceptions.ImageSaveFailException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +18,9 @@ import java.time.Instant;
 @Slf4j
 public class ImageService {
 
-  private static final String IMAGE_BASE_PATH = new File("src/main/resources/static/assets").getAbsolutePath();
+  @Value("${custom.image_path}")
+  private String imgPath;
+
   private static final String IMAGE_NOT_FOUND_JPG = "image_not_found.jpg";
 
   public String saveImage(MultipartFile image) throws ImageSaveFailException {
@@ -32,7 +35,7 @@ public class ImageService {
           : "jpg";
 
       String imageName = generateImageName();
-      String path = IMAGE_BASE_PATH + File.separator + imageName + "." + extension;
+      String path = imgPath + File.separator + imageName + "." + extension;
 
       File destination = new File(path);
       if (!destination.getParentFile().exists()) {
@@ -50,15 +53,17 @@ public class ImageService {
 
   public Resource getImage(String imageName) throws ImageNotFoundException {
     try {
-      ClassPathResource resource = new ClassPathResource("static/assets/" + imageName);
-      if (!resource.exists()) {
-        log.error("Image not exist, path=" + resource.getPath());
+      File file = new File(imgPath + File.separator + imageName);
+
+      if (!file.exists()) {
+        log.error("Image not found, path=" + file.getAbsolutePath());
         throw new ImageNotFoundException(imageName);
       }
-      return resource;
+
+      return new FileSystemResource(file);
     }
     catch (Exception e) {
-      log.error("Image not exist, imageName=" + imageName);
+      log.error("Error occurred while retrieving image, imageName=" + imageName, e);
       throw new ImageNotFoundException(imageName);
     }
   }
@@ -67,7 +72,7 @@ public class ImageService {
     if (imageName.equals(IMAGE_NOT_FOUND_JPG)) {
       return;
     }
-    String path = IMAGE_BASE_PATH + File.separator + imageName;
+    String path = imgPath + File.separator + imageName;
 
     File file = new File(path);
     if (file.exists()) {
