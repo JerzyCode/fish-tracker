@@ -52,16 +52,18 @@ public class ImageService {
     try {
       ClassPathResource resource = new ClassPathResource("static/assets/" + imageName);
       if (!resource.exists()) {
+        log.error("Image not exist, path=" + resource.getPath());
         throw new ImageNotFoundException(imageName);
       }
       return resource;
     }
     catch (Exception e) {
+      log.error("Image not exist, imageName=" + imageName);
       throw new ImageNotFoundException(imageName);
     }
   }
 
-  public void deleteImage(String imageName) throws ImageNotDeletedException {
+  public void deleteImage(String imageName) throws ImageNotDeletedException, ImageNotFoundException {
     if (imageName.equals(IMAGE_NOT_FOUND_JPG)) {
       return;
     }
@@ -77,7 +79,7 @@ public class ImageService {
     }
     else {
       log.error("Image not exist, path=" + path);
-      throw new ImageNotDeletedException(imageName);
+      throw new ImageNotFoundException(imageName);
     }
 
   }

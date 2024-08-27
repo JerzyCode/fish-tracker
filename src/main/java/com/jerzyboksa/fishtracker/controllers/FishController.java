@@ -65,7 +65,7 @@ public class FishController {
   @PutMapping
   public ResponseEntity<Void> updateFish(@RequestParam Long fishId, @ModelAttribute SaveFishRequestDTO request,
       @RequestParam(required = false) @ValidImage MultipartFile image)
-      throws NoAuthHeaderException, FishNotBelongsToUserException, ImageSaveFailException, ImageNotDeletedException {
+      throws NoAuthHeaderException, FishNotBelongsToUserException, ImageSaveFailException, ImageNotDeletedException, ImageNotFoundException {
     log.debug(String.format("updateFish(), fishId=%d, request=%s", fishId, request.toString()));
 
     String imgName = null;
@@ -81,7 +81,7 @@ public class FishController {
 
   @DeleteMapping
   public ResponseEntity<Void> deleteFish(@RequestParam Long fishId)
-      throws NoAuthHeaderException, FishNotBelongsToUserException, ImageNotDeletedException {
+      throws NoAuthHeaderException, FishNotBelongsToUserException, ImageNotDeletedException, ImageNotFoundException {
     log.debug(String.format("delete(), fishId=%d", fishId));
     imageService.deleteImage(fishService.getFishImageName(fishId));
     fishService.deleteFish(fishId, getUserId());
