@@ -24,6 +24,7 @@ public class ImageService {
   private static final String IMAGE_NOT_FOUND_JPG = "image_not_found.jpg";
 
   public String saveImage(MultipartFile image) throws ImageSaveFailException {
+    log.debug("SavingImage...");
     try {
       if (image == null || image.isEmpty()) {
         return IMAGE_NOT_FOUND_JPG;
@@ -47,6 +48,8 @@ public class ImageService {
       return imageName + "." + extension;
     }
     catch (IOException ex) {
+      log.error("Fail saving image!!, Stacktrace:");
+      ex.printStackTrace();
       throw new ImageSaveFailException();
     }
   }
