@@ -16,3 +16,6 @@ security:
   jwt:
     secret-key: 2afbfac8fe49058f12874b6c7f92d6c842d2ec05f621f9b3b4ba437eb8f7b338
     expiration-time: 31536000000
+
+custom:
+  image_path: "/assets"
