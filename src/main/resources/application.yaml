@@ -1,24 +1,4 @@
-server:
-  port: 8080
-  servlet:
-    context-path: /fish-tracker
-
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/fish-tracker-pg
-    driver-class-name: org.postgresql.Driver
-    username: admin
-    password: admin
-  jpa:
-    hibernate:
-      ddl-auto: update
-
-logging:
-  level:
-    org.springframework: INFO
-    com.jerzyboksa: DEBUG
-
-security:
-  jwt:
-    secret-key: 2afbfac8fe49058f12874b6c7f92d6c842d2ec05f621f9b3b4ba437eb8f7b338
-    expiration-time: 31536000000
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE}
+#    active: dev

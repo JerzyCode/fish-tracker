@@ -13,6 +13,25 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fish-tracker-app
+    restart: no
+    environment:
+      SERVER_PORT: 8080
+      SPRING_PROFILES_ACTIVE: prod
+      DATASOURCE_URL: jdbc:postgresql://postgres:5432/fish-tracker-pg
+      IMAGE_PATH: "/assets"
+      DATASOURCE_USERNAME: admin
+      DATASOURCE_PASSWORD: admin
+      JWT_SECRET_KEY: 2afbfac8fe49058f12874b6c7f92d6c842d2ec05f621f9b3b4ba437eb8f7b338
+      JWT_EXPIRATION_TIME: 31536000000
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:
