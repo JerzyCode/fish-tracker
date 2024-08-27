@@ -5,7 +5,7 @@ server:
 
 spring:
   datasource:
-    url: ${DATASOURCE_URL}
+    url: jdbc:postgresql://localhost:5432/fish-tracker-pg
     driver-class-name: org.postgresql.Driver
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
