@@ -21,6 +21,8 @@ public class ImageService {
   @Value("${custom.image_path}")
   private String imgPath;
 
+  private String systemPath = System.getProperty("user.dir") + File.separator;
+
   private static final String IMAGE_NOT_FOUND_JPG = "image_not_found.jpg";
 
   public String saveImage(MultipartFile image) throws ImageSaveFailException {
@@ -35,7 +37,7 @@ public class ImageService {
           : "jpg";
 
       String imageName = generateImageName();
-      String path = imgPath + File.separator + imageName + "." + extension;
+      String path = systemPath + imgPath + File.separator + imageName + "." + extension;
 
       log.debug("saveImage() path=" + path);
 
@@ -61,7 +63,7 @@ public class ImageService {
 
   public Resource getImage(String imageName) throws ImageNotFoundException {
     try {
-      File file = new File(imgPath + File.separator + imageName);
+      File file = new File(systemPath+imgPath + File.separator + imageName);
 
       if (!file.exists()) {
         log.error("Image not found, path=" + file.getAbsolutePath());
@@ -80,7 +82,7 @@ public class ImageService {
     if (imageName.equals(IMAGE_NOT_FOUND_JPG)) {
       return;
     }
-    String path = imgPath + File.separator + imageName;
+    String path = systemPath+imgPath + File.separator + imageName;
 
     File file = new File(path);
     if (file.exists()) {
