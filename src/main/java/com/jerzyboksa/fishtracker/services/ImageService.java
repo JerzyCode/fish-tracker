@@ -5,6 +5,7 @@ import com.jerzyboksa.fishtracker.exceptions.ImageNotFoundException;
 import com.jerzyboksa.fishtracker.exceptions.ImageSaveFailException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -63,11 +64,13 @@ public class ImageService {
 
   public Resource getImage(String imageName) throws ImageNotFoundException {
     try {
-      File file = new File(systemPath+imgPath + File.separator + imageName);
+      File file = new File(systemPath + imgPath + File.separator + imageName);
 
       if (!file.exists()) {
-        log.error("Image not found, path=" + file.getAbsolutePath());
-        throw new ImageNotFoundException(imageName);
+        log.debug("getImage(), image not found, so return image_not_found.jpg");
+        return new ClassPathResource("static/assets/image_not_found.jpg");
+        //        log.error("Image not found, path=" + file.getAbsolutePath());
+        //        throw new ImageNotFoundException(imageName);
       }
 
       return new FileSystemResource(file);
@@ -82,7 +85,7 @@ public class ImageService {
     if (imageName.equals(IMAGE_NOT_FOUND_JPG)) {
       return;
     }
-    String path = systemPath+imgPath + File.separator + imageName;
+    String path = systemPath + imgPath + File.separator + imageName;
 
     File file = new File(path);
     if (file.exists()) {
