@@ -58,7 +58,7 @@ public class FishController {
     var userId = getUserId();
     log.debug(String.format("createFish(), userId=%d, request=%s", userId, request.toString()));
 
-    String imgName = imageService.saveImage(image);
+    String imgName = imageService.saveImageAndReturnImageName(image);
     return ResponseEntity.ok(fishService.createFish(userId, request, imgName));
   }
 
@@ -72,7 +72,7 @@ public class FishController {
     if (image != null && !image.isEmpty()) {
       var oldImageName = fishService.getFishImageName(fishId);
       imageService.deleteImage(oldImageName);
-      imgName = imageService.saveImage(image);
+      imgName = imageService.saveImageAndReturnImageName(image);
     }
 
     fishService.updateFish(fishId, getUserId(), request, imgName);

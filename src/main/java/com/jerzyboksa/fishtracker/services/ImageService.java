@@ -3,6 +3,7 @@ package com.jerzyboksa.fishtracker.services;
 import com.jerzyboksa.fishtracker.exceptions.ImageNotDeletedException;
 import com.jerzyboksa.fishtracker.exceptions.ImageNotFoundException;
 import com.jerzyboksa.fishtracker.exceptions.ImageSaveFailException;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -16,17 +17,18 @@ import java.io.IOException;
 import java.time.Instant;
 
 @Service
+@Setter
 @Slf4j
 public class ImageService {
 
   @Value("${custom.image_path}")
   private String imgPath;
 
-  private String systemPath = System.getProperty("user.dir") + File.separator;
+  private final String systemPath = System.getProperty("user.dir") + File.separator;
 
   private static final String IMAGE_NOT_FOUND_JPG = "image_not_found.jpg";
 
-  public String saveImage(MultipartFile image) throws ImageSaveFailException {
+  public String saveImageAndReturnImageName(MultipartFile image) throws ImageSaveFailException {
     try {
       if (image == null || image.isEmpty()) {
         return IMAGE_NOT_FOUND_JPG;
@@ -69,8 +71,6 @@ public class ImageService {
       if (!file.exists()) {
         log.debug("getImage(), image not found, so return image_not_found.jpg");
         return new ClassPathResource("static/assets/image_not_found.jpg");
-        //        log.error("Image not found, path=" + file.getAbsolutePath());
-        //        throw new ImageNotFoundException(imageName);
       }
 
       return new FileSystemResource(file);
