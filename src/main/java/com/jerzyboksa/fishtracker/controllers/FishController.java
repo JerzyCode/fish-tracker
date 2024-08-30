@@ -2,7 +2,7 @@ package com.jerzyboksa.fishtracker.controllers;
 
 import com.jerzyboksa.fishtracker.exceptions.*;
 import com.jerzyboksa.fishtracker.models.dto.FishDetailsDTO;
-import com.jerzyboksa.fishtracker.models.dto.FishLightDto;
+import com.jerzyboksa.fishtracker.models.dto.FishLightDTO;
 import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.services.FishService;
 import com.jerzyboksa.fishtracker.services.ImageService;
@@ -31,7 +31,7 @@ public class FishController {
   private final NativeWebRequest nativeWebRequest;
 
   @GetMapping
-  public ResponseEntity<List<FishLightDto>> getFishesLightForUser(@RequestParam Long userId) {
+  public ResponseEntity<List<FishLightDTO>> getFishesLightForUser(@RequestParam Long userId) {
     log.debug("getFishesLightForUser(), userId=" + userId);
     return ResponseEntity.ok(fishService.getFishesForUser(userId));
   }
@@ -40,6 +40,12 @@ public class FishController {
   public ResponseEntity<FishDetailsDTO> getFishDetails(@PathVariable Long fishId) {
     log.debug("getFishDetails(), fishId=" + fishId);
     return ResponseEntity.ok(fishService.getFishDetails(fishId));
+  }
+
+  @GetMapping("/random")
+  public ResponseEntity<FishLightDTO> getRandomFish() {
+    log.debug("getRandomFish()");
+    return ResponseEntity.ok(fishService.getRandomFish());
   }
 
   @GetMapping("/image/{fishId}")
@@ -58,7 +64,7 @@ public class FishController {
     var userId = getUserId();
     log.debug(String.format("createFish(), userId=%d, request=%s", userId, request.toString()));
 
-    String imgName = imageService.saveImage(image);
+    String imgName = imageService.saveImageAndReturnImageName(image);
     return ResponseEntity.ok(fishService.createFish(userId, request, imgName));
   }
 
@@ -72,7 +78,7 @@ public class FishController {
     if (image != null && !image.isEmpty()) {
       var oldImageName = fishService.getFishImageName(fishId);
       imageService.deleteImage(oldImageName);
-      imgName = imageService.saveImage(image);
+      imgName = imageService.saveImageAndReturnImageName(image);
     }
 
     fishService.updateFish(fishId, getUserId(), request, imgName);

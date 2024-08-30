@@ -3,7 +3,7 @@ package com.jerzyboksa.fishtracker.services;
 import com.jerzyboksa.fishtracker.exceptions.FishNotBelongsToUserException;
 import com.jerzyboksa.fishtracker.models.Fish;
 import com.jerzyboksa.fishtracker.models.dto.FishDetailsDTO;
-import com.jerzyboksa.fishtracker.models.dto.FishLightDto;
+import com.jerzyboksa.fishtracker.models.dto.FishLightDTO;
 import com.jerzyboksa.fishtracker.models.dto.SaveFishRequestDTO;
 import com.jerzyboksa.fishtracker.repositories.FishRepository;
 import com.jerzyboksa.fishtracker.repositories.UserRepository;
@@ -19,9 +19,9 @@ public class FishService {
   private final UserRepository userRepository;
   private final FishRepository fishRepository;
 
-  public List<FishLightDto> getFishesForUser(Long userId) {
+  public List<FishLightDTO> getFishesForUser(Long userId) {
     return fishRepository.findAllByUserId(userId).stream()
-        .map(FishLightDto::of)
+        .map(FishLightDTO::of)
         .toList();
   }
 
@@ -39,8 +39,13 @@ public class FishService {
         .method(fish.getMethod())
         .bait(fish.getBait())
         .userId(user.getId())
-        .username(user.getUsername())
+        .username(user.getName())
         .build();
+  }
+
+  public FishLightDTO getRandomFish() {
+    var randomFish = fishRepository.getRandomFish().orElseThrow();
+    return FishLightDTO.of(randomFish);
   }
 
   public String getFishImageName(Long fishId) {

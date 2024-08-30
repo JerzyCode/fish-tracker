@@ -84,7 +84,25 @@ class FishServiceTest {
     assertThat(result.getMethod()).isEqualTo(fish.getMethod());
     assertThat(result.getBait()).isEqualTo(fish.getBait());
     assertThat(result.getUserId()).isEqualTo(user.getId());
-    assertThat(result.getUsername()).isEqualTo(user.getUsername());
+    assertThat(result.getUsername()).isEqualTo(user.getName());
+  }
+
+  @Test
+  void get_random_fish_should_return_random_fish() {
+    //given
+    var user = TestHelper.createUser(1L, "user@mail.com", "user");
+    var fish = TestHelper.createFish(1L, "specie", user);
+    when(fishRepository.getRandomFish()).thenReturn(Optional.of(fish));
+
+    //when
+    var result = sut.getRandomFish();
+
+    //then
+    assertThat(result.getId()).isEqualTo(fish.getId());
+    assertThat(result.getSpecie()).isEqualTo(fish.getSpecie());
+    assertThat(result.getWeight()).isEqualTo(fish.getWeight());
+    assertThat(result.getSize()).isEqualTo(fish.getSize());
+    assertThat(result.getDate()).isEqualTo(String.valueOf(fish.getDate()));
   }
 
   @Test
