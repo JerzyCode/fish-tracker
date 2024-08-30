@@ -39,7 +39,7 @@ public class FishService {
         .method(fish.getMethod())
         .bait(fish.getBait())
         .userId(user.getId())
-        .username(user.getUsername())
+        .username(user.getName())
         .build();
   }
 
