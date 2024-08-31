@@ -4,31 +4,23 @@ import com.jerzyboksa.fishtracker.models.Fish;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 @Data
 @Builder
-public class FishLightDto {
+public class FishLightDTO {
   private Long id;
   private String date;
   private String specie;
   private Double size;
   private Double weight;
 
-  public static FishLightDto of(Fish fish) {
-    return FishLightDto.builder()
+  public static FishLightDTO of(Fish fish) {
+    return FishLightDTO.builder()
         .id(fish.getId())
-        .date(formatDate(fish.getDate()))
+        .date(String.valueOf(fish.getDate()))
         .specie(fish.getSpecie())
         .size(fish.getSize())
         .weight(fish.getWeight())
         .build();
   }
 
-  private static String formatDate(LocalDate date) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    return date.format(formatter);
-
-  }
 }
