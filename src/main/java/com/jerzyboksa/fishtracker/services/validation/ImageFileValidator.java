@@ -35,7 +35,6 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
   }
 
   private boolean isValidSize(long numOfBytes) {
-    log.debug("isValidSize(), bytes=" + numOfBytes + ", maximum=" + maxSize);
     if (numOfBytes > maxSize) {
       log.error(TOO_BIG_FILE);
       return false;

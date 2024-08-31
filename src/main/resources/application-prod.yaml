@@ -4,6 +4,9 @@ server:
     context-path: /fish-tracker
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE}
   datasource:
     url: ${DATASOURCE_URL}
     driver-class-name: org.postgresql.Driver
@@ -25,3 +28,4 @@ security:
 
 custom:
   image_path: ${IMAGE_PATH}
+  image_size: ${IMAGE_SIZE}
