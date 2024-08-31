@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class ImageFileValidator implements ConstraintValidator<ValidImage, MultipartFile> {
   @Value("${custom.image_size}")
-  private long maxSize ;
+  private long maxSize;
   private static final String TOO_BIG_FILE = "Rozmiar pliku jest zbyt duży";
   private static final String BAD_EXTENSION_FILE = "Plik posiada niepoprawne rozszerzenie";
 
@@ -35,6 +35,7 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
   }
 
   private boolean isValidSize(long numOfBytes) {
+    log.debug("isValidSize(), bytes=" + numOfBytes + ", maximum=" + maxSize);
     if (numOfBytes > maxSize) {
       log.error(TOO_BIG_FILE);
       return false;
