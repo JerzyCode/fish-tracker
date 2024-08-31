@@ -2,18 +2,21 @@ package com.jerzyboksa.fishtracker.services.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
+@Setter
 public class ImageFileValidator implements ConstraintValidator<ValidImage, MultipartFile> {
-  private long maxSize;
+  @Value("${custom.image_size}")
+  private long maxSize ;
   private static final String TOO_BIG_FILE = "Rozmiar pliku jest zbyt duży";
   private static final String BAD_EXTENSION_FILE = "Plik posiada niepoprawne rozszerzenie";
 
   @Override
   public void initialize(ValidImage constraintAnnotation) {
-    this.maxSize = constraintAnnotation.maxSize();
   }
 
   @Override

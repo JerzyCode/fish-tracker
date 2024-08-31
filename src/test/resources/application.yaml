@@ -19,3 +19,4 @@ security:
 
 custom:
   image_path: "/assets"
+  image_size: 1048576
